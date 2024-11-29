@@ -59,7 +59,7 @@ struct CustomDialogExample {
 struct Todolist {
   @State inputVal: string = '';
   @State curEditObj: ICurEditObj = { val: "", index: 0 };
-  @State private list: string[] = [];
+  @State private list: string[] = ["1"];
   scroller:Scroller = new Scroller();
   dialogController: CustomDialogController = new CustomDialogController({
     builder: CustomDialogExample({
