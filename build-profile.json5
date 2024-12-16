@@ -1,10 +1,37 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/fangchaoqun/.ohos/config/default_harmonyTodolist_1E20EuW6JSNNRofCNXMMXzxBWhxfMG9yA9x0FxAlCXE=.cer",
+          "storePassword": "0000001BBCE9628F7A7C694D51C2D4E8BC486AB1CD39EE637AD97D288CB7B44B697D5D6A5F1D26743B3E26",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B65705A137857D155C2677625307655E5DC561D53AAE2D84E614A2FF8FE87AC48EA79ADF58066CF",
+          "profile": "/Users/fangchaoqun/.ohos/config/default_harmonyTodolist_1E20EuW6JSNNRofCNXMMXzxBWhxfMG9yA9x0FxAlCXE=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/fangchaoqun/.ohos/config/default_harmonyTodolist_1E20EuW6JSNNRofCNXMMXzxBWhxfMG9yA9x0FxAlCXE=.p12"
+        }
+      },
+      {
+        "name": "release",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "0000001BE74717FEA9E5CDCB449AEF21A080D4189E4B3F60BBD2B328C4A79CE5621FB58203ADD5BF3A2B13",
+          "certpath": "/Users/fangchaoqun/code/harmonyTodolist/arkts-todolist.cer",
+          "keyAlias": "arktsTodolist_release",
+          "keyPassword": "0000001B5C4C6F3A34AA3EA36A4F43E950EC4F34A113709B2AAC133D1DA50E30DA49090C851E3A729787A4",
+          "profile": "/Users/fangchaoqun/code/harmonyTodolist/arktsTodolistProfileRelease.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/fangchaoqun/code/harmonyTodolist/arktsTodolist_release.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "release",
         "compatibleSdkVersion": "5.0.0(12)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {

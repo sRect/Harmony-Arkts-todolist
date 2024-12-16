@@ -39,6 +39,7 @@ struct CustomDialogExample {
           .onClick(() => {
             this.controller.close()
             if (this.confirm) {
+              // 点击确定修改，将当前的值传回去
               this.confirm(this.curEditVal)
             }
           })
@@ -137,7 +138,9 @@ struct Todolist {
                     .fontSize(14)
                     .fontColor('#333333')
                     .width('58%')
-                    .wordBreak(WordBreak.BREAK_ALL)
+                    // .wordBreak(WordBreak.BREAK_ALL)
+                    // .maxLines(2)
+                    .textOverflow({ overflow: TextOverflow.MARQUEE })
 
                   Row({space: 5}) {
                     Button() {
@@ -178,7 +181,8 @@ struct Todolist {
                 .justifyContent(FlexAlign.SpaceBetween)
                 .alignItems(VerticalAlign.Center)
                 .width('100%')
-                .height(50)
+                .flexGrow(0)
+                .height('50')
                 .backgroundColor('#f0f0f0')
                 .padding('10')
                 .borderRadius(4);

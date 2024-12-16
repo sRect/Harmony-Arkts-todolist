@@ -25,7 +25,7 @@ struct Index {
               middle: { anchor: '__container__', align: HorizontalAlign.Center }
             })
           Button() {
-            Text('goto about')
+            Text('调用原生api')
               .fontSize(30)
               .fontWeight(FontWeight.Normal)
               .fontColor('white')
