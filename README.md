@@ -1,6 +1,16 @@
 # Harmony TodoList demo
 
-> 本文将通过使用ArkTS、uni-app、Taro三种框架，分别写todolist小demo，进行对比。
+> 本文将通过使用ArkTS、uni-app、Taro三种方式，分别写todolist小demo，进行对比。
+
+**本文操作系统及主要package version**
+
+| name | version |
+| --- | --- | 
+| 操作系统 | macOS |
+| Nodejs | v20.9.0 |
+| DevEco-Studio | 5.0.0 Release |
+| HbuilderX | 4.36 |
+| @tarojs/cli | v4.0.8 |
 
 ## 1. 前置条件
 
@@ -1009,3 +1019,355 @@ const handleOpenCamera = async () => {
 但是最终失败了，image标签的error事件显示base64路径错误`404 Not Found`` 有大佬知道这里怎么解决的，麻烦留言告知一声。
 
 ## 4. 使用taro+react
+
+> [Taro开发鸿蒙ArkUI文档](https://taro-docs.jd.com/docs/next/harmony)
+
+### 4.1 首先初始化taro项目
+
+1. 安装taro-cli，选择vite模板
+
+  ```bash
+  npm i -g @tarojs/cli@beta`
+  ```
+
+2. 初始化项目
+
+  ```bash
+  taro init xxx
+  ```
+
+3. 安装 Taro 适配鸿蒙插件并修改 Taro 编译配置
+
+  - 安装插件
+
+  ```bash
+  npm i @tarojs/plugin-platform-harmony-ets@beta
+  ```
+
+  - config/index.ts
+
+  ```javascript
+  import path from 'node:path';
+
+  config = {
+    // 配置使用插件
+    plugins: ['@tarojs/plugin-platform-harmony-ets'],
+    // harmony 相关配置
+    harmony: {
+      // 将编译方式设置为使用 Vite 编译
+      compiler: 'vite',
+      // 【必填】鸿蒙主应用的绝对路径
+      // 这里等下在DevEco-studio里创建项目的时候，就选择这个文件夹地址
+      projectPath: path.resolve(process.cwd(), '../MyApplication'),
+      hapName: 'entry',
+      name: 'default',
+    },
+  }
+  ```
+
+4. package.json文件中新增scripts命令
+
+  ```json
+  {
+    "scripts": {
+      "build:harmony": "taro build --type harmony",
+      "dev:harmony": "npm run build:harmony -- --watch"
+    }
+  }
+  ```
+
+### 4.2 DevEco-Studio中创建主项目
+
+![](./markdown-static/taro-projectpath.png)
+
+**注意：**文件夹关系一定要对应好，即现在有两个项目，taro中编译的输出到DevEco-Studio里
+
+### 4.3 启动运行
+
+> 下面报错信息弄得头疼
+
+1. 启动taro项目
+
+```bash
+npm run dev:harmony
+```
+
+启动后直接报错：
+
+```log
+node:internal/modules/cjs/loader:1327
+  return process.dlopen(module, path.toNamespacedPath(filename));
+                ^
+
+Error: dlopen(/Users/xxx/code/harmonyTodolistTaro/node_modules/.pnpm/@tarojs+parse-css-to-stylesheet-darwin-arm64@0.0.69/node_modules/@tarojs/parse-css-to-stylesheet-darwin-arm64/parse-css-to-stylesheet.darwin-arm64.node, 0x0001): Library not loaded: /opt/homebrew/opt/pcre2/lib/libpcre2-8.0.dylib
+  Referenced from: <005B3B76-8884-3214-A052-75F904AFBABF> /Users/xxx/code/harmonyTodolistTaro/node_modules/.pnpm/@tarojs+parse-css-to-stylesheet-darwin-arm64@0.0.69/node_modules/@tarojs/parse-css-to-stylesheet-darwin-arm64/parse-css-to-stylesheet.darwin-arm64.node
+  Reason: tried: '/opt/homebrew/opt/pcre2/lib/libpcre2-8.0.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/homebrew/opt/pcre2/lib/libpcre2-8.0.dylib' (no such file), '/opt/homebrew/opt/pcre2/lib/libpcre2-8.0.dylib' (no such file)
+    at Object.Module._extensions..node (node:internal/modules/cjs/loader:1327:18)
+    at Module.load (node:internal/modules/cjs/loader:1091:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:938:12)
+    at Module.require (node:internal/modules/cjs/loader:1115:19)
+    at require (node:internal/modules/helpers:130:18)
+    at Object.<anonymous> (/Users/xxx/code/harmonyTodolistTaro/node_modules/.pnpm/@tarojs+parse-css-to-stylesheet@0.0.69/node_modules/@tarojs/parse-css-to-stylesheet/index.js:141:29)
+    at Module._compile (node:internal/modules/cjs/loader:1241:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1295:10)
+    at Object.newLoader [as .js] (/Users/xxx/code/harmonyTodolistTaro/node_modules/.pnpm/pirates@4.0.6/node_modules/pirates/lib/index.js:121:7)
+    at Module.load (node:internal/modules/cjs/loader:1091:32) {
+  code: 'ERR_DLOPEN_FAILED'
+}
+
+Node.js v20.9.0
+```
+2. 解决启动报错
+
+  - 删除node_modules后，重新`pnpm install`安装依赖，还是不行
+  - 以为是全局安装的taro cli版本是beta版本导致的，换了稳定v4.0.8版本，再次启动还是不行
+  - 以为是初始化项目选择了pnpm导致安装，重新来选择npm，结果还是不行
+
+  - **解决：**
+
+    最终丢给ai，提示要安装`pcre2`,执行`brew list | grep pcre2`后，果然没有打印，执行`brew install pcre2`安装，重新启动项目，解决了。
+
+3. 正常启动日志：
+
+```log
+> harmonyTodolistTaro@1.0.0 build:harmony
+> taro build --type harmony --watch
+
+👽 Taro v4.0.8
+vite v4.5.5 building for production...
+
+watching for file changes...
+
+build started...
+transforming (1) taro:compiler(node:25315) [stylelint:002] DeprecationWarning: The CommonJS Node.js API is deprecated.
+See https://stylelint.io/migration-guide/to-16
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:25315) [stylelint:002] DeprecationWarning: The CommonJS Node.js API is deprecated.
+See https://stylelint.io/migration-guide/to-16
+✓ 7 modules transformed.
+rendering chunks (6)...
+
+开始 ohpm install 脚本执行...
+
+/bin/sh: /Users/xxx/Library/Huawei/ohpm/bin/ohpm: No such file or directory
+自动安装依赖失败，请手动执行 ohpm install 或在 DevEco Studio 中打开 oh-package.json5 并点击 Sync Now 按钮
+MyApplication/entry/src/main/ets/app.css.xss.js                  0.09 kB │ gzip: 0.10 kB │ map: 0.10 kB
+MyApplication/entry/src/main/ets/index.css.xss.js                0.10 kB │ gzip: 0.10 kB │ map: 0.10 kB
+MyApplication/entry/src/main/ets/app_comp.js                     0.27 kB │ gzip: 0.21 kB │ map: 0.69 kB
+MyApplication/entry/src/main/ets/pages/index/index_taro_comp.js  0.40 kB │ gzip: 0.27 kB │ map: 0.11 kB
+MyApplication/entry/src/main/ets/app_taro_comp.js                0.83 kB │ gzip: 0.46 kB │ map: 0.13 kB
+MyApplication/entry/src/main/ets/pages/index/index_comp.js       0.89 kB │ gzip: 0.42 kB │ map: 0.98 kB
+MyApplication/entry/src/main/ets/app.ets                         2.21 kB │ gzip: 0.86 kB
+MyApplication/entry/src/main/ets/render.ets                      5.76 kB │ gzip: 1.23 kB
+MyApplication/entry/src/main/ets/pages/index/index.ets           9.04 kB │ gzip: 2.44 kB
+built in 312ms.
+```
+
+4. DevEco-Studio中打开模拟器，不出意外，hello world正常显示
+
+5. 关于上面启动后警告信息`ohpm install`自动安装依赖失败
+
+  > 其实就是本地全局的OHPM_HOME环境变量配置问题
+
+  打开本地zsh，测试下，能打印出版本号，说明就没问题
+
+  ```bash
+  ohpm -v
+  ```
+
+  但我这本地，通过zsh打开的命令行，没打印出ohpm的版本号，而通过DevEco-Studio内置的命令行，可以打印出ohpm版本号5.0.8
+
+  还有本地就没有`/Users/xxx/Library/Huawei/ohpm`这个目录，哪里出问题了？
+
+  **解决：**
+
+  - 1. [首先下载ohpm工具包](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-command-line-ohpm-0000001490235312-V2),找到`Command Line Tools for HarmonyOS`,选择[对应的平台下载即可](https://developer.huawei.com/consumer/cn/deveco-studio/archive/)
+
+  - 2. 解压目录
+    将解压后的ohpm文件夹复制到本地`/Users/xxx/Library/Huawei`文件夹
+
+    ```bash
+    # 首先切到该文件夹
+    cd /Users/xxx/Library/Huawei/ohpm/bin
+    # 然后执行下面命令
+    ./init
+    ```
+
+  - 3. 配置ohpm环境变量
+    ```bash
+    echo $SHELL
+    ```
+    我这里输出`/bin/zsh`,所以修改`~/.zshrc`配置文件，bash的修改`~/.bashrc`即可
+
+    ```bash
+    sudo vim ~/.zshrc
+    ```
+
+    进入编辑模式，然后添加
+    ```bash
+    # ohpm
+    export OHPM_HOME=/Users/xxx/Library/Huawei/ohpm
+    export PATH=$PATH:$OHPM_HOME/bin
+    # ohpm end
+    ```
+
+    保存退出后，执行
+
+    ```bash
+    source ~/.bashrc
+    ```
+
+    此时再执行,不出意外，正确打印出版本号。但这里打印出来的是`1.2.0`，但是DevEco-Studio的内置命令行打印出来的是`5.0.8`。
+
+    ```
+    ohpm -v 
+    ```
+
+6. 再次执行`npm run dev:harmony`,ohpm警告问题解决，修改文件后也ok。
+
+  ```log
+  > harmonyTodolistTaro@1.0.0 build:harmony
+  > taro build --type harmony --watch
+
+  👽 Taro v4.0.8
+
+  vite v4.5.5 building for production...
+
+  watching for file changes...
+
+  build started...
+  transforming (1) taro:compiler(node:11988) [stylelint:002] DeprecationWarning: The CommonJS Node.js API is deprecated.
+  See https://stylelint.io/migration-guide/to-16
+  (Use `node --trace-deprecation ...` to show where the warning was created)
+  (node:11988) [stylelint:002] DeprecationWarning: The CommonJS Node.js API is deprecated.
+  See https://stylelint.io/migration-guide/to-16
+  ✓ 7 modules transformed.
+  rendering chunks (6)...
+
+  开始 ohpm install 脚本执行...
+
+  install completed in 0s 1ms
+  执行 ohpm install 脚本成功。
+
+  ../harmonyTodolistTaroMain/entry/src/main/ets/app.less.xss.js                 0.10 kB │ gzip: 0.10 kB │ map: 0.10 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/index.less.xss.js               0.10 kB │ gzip: 0.10 kB │ map: 0.10 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/app_comp.js                     0.27 kB │ gzip: 0.21 kB │ map: 0.71 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/pages/index/index_taro_comp.js  0.40 kB │ gzip: 0.27 kB │ map: 0.11 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/app_taro_comp.js                0.83 kB │ gzip: 0.46 kB │ map: 0.13 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/pages/index/index_comp.js       0.89 kB │ gzip: 0.42 kB │ map: 1.00 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/app.ets                         2.21 kB │ gzip: 0.86 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/render.ets                      5.76 kB │ gzip: 1.23 kB
+  ../harmonyTodolistTaroMain/entry/src/main/ets/pages/index/index.ets           9.04 kB │ gzip: 2.44 kB
+  built in 435ms.
+  ```
+
+7. 关于taro项目启动后，DevEco-Studio打开模拟器报错
+
+  ```log
+  > hvigor ERROR: Failed :default:default@HotReloadArkTS... 
+  > hvigor ERROR:  ERROR: srcEntry file '/Users/xxx/code/harmonyTodolistTaroMain/entry/src/main/ets/entrybackupability/EntryBackupAbility.ets' does not exist. 
+  > hvigor ERROR: BUILD FAILED in 904 ms
+  ```
+
+  本地确实没有这个文件，不知道什么原因造成的
+
+  **解决：**
+
+  卸载掉全局安装的taro/cli的beta版本，重新安装稳定版本，再次重新初始化项目，按着那些步骤重新运行，ok了
+
+  ```bash
+  npm i -g @tarojs/cli
+  ```
+
+### 4.4 完成todolist页面
+
+```tsx
+import {useState} from "react";
+import { View, Text, Input, Button, ScrollView } from '@tarojs/components';
+import Taro from "@tarojs/taro";
+import './index.less'
+
+export default function Index () {
+  const [val, setVal] = useState<string>("");
+  const [list, setList] = useState<Array<string>>([]);
+
+  const handleAdd = () => {
+    if(val.trim() === "") {
+      Taro.showToast({
+        title: "添加内容不可为空",
+        icon: "none"
+      });
+
+      return;
+    }
+
+    setList([val, ...list]);
+    setVal("");
+  }
+
+  const handleDelete = (index: number) => {
+    console.log("index:", index);
+    Taro.showModal({
+      title: "提示",
+      content: "确定要删除此项吗？",
+      success: (res) => {
+        if (res.confirm) {
+          const newList = [...list];
+
+          newList.splice(index, 1);
+          setList(newList);
+        }
+      }
+    });
+  }
+
+  return (
+    <View className='wrap'>
+      <View className='head'>
+        <View className='inputWrap'>
+          <Input className='input' type='text' placeholder='请输入...' value={val} onInput={e => setVal(e.detail.value)} />
+        </View>
+
+        <View className='btnWrap'>
+          <Button size='mini' className='btn' type='primary' onClick={handleAdd}>
+            <Text className='text-white text-[14px] font-[500]'>添加</Text>
+          </Button>
+        </View>
+      </View>
+
+      <View className='scrollWrap'>
+        {
+          list.length === 0
+            ? <View className='empty'><Text className='text'>暂无数据</Text></View>
+            : <ScrollView className='scroll'>
+                {
+                  list.map((item, index) => (<View key={index} className='item'>
+                    <View className='left'>
+                      <Text className='text'>{index+1}. {item}</Text>
+                    </View>
+
+                    <View className='right'>
+                      <Button size='mini' className='btn' type='default'>
+                        <Text className='text-[#333333] text-[14px] font-[500]'>编辑</Text>
+                      </Button>
+                      <Button size='mini' className='btn' type='warn' onClick={() => handleDelete(index)}>
+                        <Text className='text-white text-[14px] font-[500]'>删除</Text>
+                      </Button>
+                    </View>
+                  </View>))
+                }
+              </ScrollView>
+        }
+      </View>
+    </View>
+  )
+}
+```
+
+![](./markdown-static/taro.gif)
+
+实际感受就是，css样式有些不支持，最要命的是，项目热更新没生效，虽然没报错，但是模拟器中的样式不是最新的，只能每次重新启动taro项目，重新启动模拟器，这样才是最新的样式。很心累，使用姿势哪里有问题，麻烦评论区说下。
+
+## 5.写在最后
+
+如果文章对您有帮助，可以关注我的个人公众号`半个柠檬2020`，偶尔也会在公众号上面更新一些自己的学习笔记。
