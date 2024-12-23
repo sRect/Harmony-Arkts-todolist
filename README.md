@@ -1,8 +1,8 @@
-# Harmony TodoList demo
+# 使用ArkTS、Uni-app、Taro开发鸿蒙 todolist对比
 
-> 本文将通过使用ArkTS、uni-app、Taro三种方式，分别写todolist小demo，进行对比。
+> 本文将通过使用ArkTS、Uni-app、Taro三种方式，分别完成todolist小demo。
 
-**本文操作系统及主要package version**
+**1. 本文操作系统及主要package version**
 
 | name | version |
 | --- | --- | 
@@ -11,6 +11,14 @@
 | DevEco-Studio | 5.0.0 Release |
 | HbuilderX | 4.36 |
 | @tarojs/cli | v4.0.8 |
+
+**2. 本文github仓库地址**
+
+| name | url |
+| --- | --- | 
+|Harmony-Arkts-todolist|https://github.com/sRect/Harmony-Arkts-todolist|
+|Harmony-uniapp-todolist|https://github.com/sRect/Harmony-uniapp-todolist|
+|Harmony-taro-todolist|https://github.com/sRect/Harmony-taro-todolist|
 
 ## 1. 前置条件
 
@@ -1366,7 +1374,7 @@ export default function Index () {
 
 ![](./markdown-static/taro.gif)
 
-实际感受就是，css样式有些不支持，最要命的是，项目热更新没生效，虽然没报错，但是模拟器中的样式不是最新的，只能每次重新启动taro项目，重新启动模拟器，这样才是最新的样式。很心累，使用姿势哪里有问题，麻烦评论区说下。
+实际感受就是，css样式有些不支持，最要命的是，项目热更新没生效，虽然没报错，但是模拟器中的样式不是最新的，只能每次重新启动taro项目，重新启动模拟器，这样才是最新的样式。很心累，使用姿势哪里有问题，麻烦评论区说下。只能匆忙结束taro。
 
 ## 5.写在最后
 
